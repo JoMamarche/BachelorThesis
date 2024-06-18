@@ -4,7 +4,7 @@ from globals import RobotStats
 from globals import GlobalState
 import stepper_control as sc
 import math
-
+import serial #for serial communication with arduino
 import threading
 
 
@@ -211,24 +211,18 @@ def reset():
     msb.SendCustomCommand('ResumeMotion()')
     msb.SendCustomCommand(f'SetJointVelLimit({RobotStats().start_joint_vel_limit})')
 
-    return
-
 
 def init_sequence():
-
     #connect to robot if the robot is not connected already (e.g. from reset)
     if(GlobalState().msb == None):
-        try:    
-            GlobalState().msb = mdr.Robot() #msb = MegaSonoBot # instance of the robot class
-            GlobalState().msb.Connect(address='192.168.0.100') #using IP address of the robot and Port 10000 to control
+
+        GlobalState().msb = mdr.Robot() #msb = MegaSonoBot # instance of the robot class
+        GlobalState().msb.Connect(address='192.168.0.100') #using IP address of the robot and Port 10000 to control
             
-            GlobalState().msb.ActivateRobot() #same as in the webinterface: activate Robot
-            GlobalState().msb.ResetError()
-            GlobalState().msb.Home() #Home the robot
-            GlobalState().msb.ResetError()
-        except:
-            print("Could not connect to robot")
-            return
+        GlobalState().msb.ActivateRobot() #same as in the webinterface: activate Robot
+        GlobalState().msb.ResetError()
+        GlobalState().msb.Home() #Home the robot
+        GlobalState().msb.ResetError()
 
     if(GlobalState().arduino_port == None):
        #activate steppers

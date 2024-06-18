@@ -8,6 +8,7 @@ from datetime import datetime
 import mecademicpy.robot as mdr
 from PIL import Image, ImageTk
 import sys
+from send_command_to_arduino import send_command_to_arduino
 
 '''
 from rich import print
@@ -427,6 +428,8 @@ def stop():
 
 def init_print_but():
 
+    
+
     global init_button
     
     if(GUI.check_occupied(init_button)):
@@ -444,6 +447,7 @@ def init_print_but():
     GlobalState().printing_state = 0 #0 = not printing
 
     print("start init")
+    send_command_to_arduino("s,")
     init_thread = threading.Thread(target=init)
     init_thread.start()
 
@@ -451,6 +455,7 @@ def init_print_but():
     
 
     return
+
 
 def init():
 
@@ -964,13 +969,13 @@ def init_gui():
     
     buttoncolor = '#0859C3'
 
-    ctk.set_appearance_mode("System")  
+    ctk.set_appearance_mode("dark")  
     ctk.set_default_color_theme("blue")  
 
     root = ctk.CTk()
     root.geometry("850x450")
     root.title("SonoBone control interface")
-    root.iconbitmap(search_file("SonoBone_icon.ico"))
+    #root.iconbitmap(search_file("SonoBone_icon.ico"))
 
     #initialize all the gui parts
     print_control(root)
