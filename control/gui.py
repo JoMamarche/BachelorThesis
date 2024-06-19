@@ -8,6 +8,7 @@ from datetime import datetime
 import mecademicpy.robot as mdr
 from PIL import Image, ImageTk
 import sys
+import serial
 from send_command_to_arduino import send_command_to_arduino
 
 '''
@@ -429,6 +430,7 @@ def stop():
 def init_print_but():
 
     
+    send_command_to_arduino()
 
     global init_button
     
@@ -447,7 +449,6 @@ def init_print_but():
     GlobalState().printing_state = 0 #0 = not printing
 
     print("start init")
-    send_command_to_arduino("s,")
     init_thread = threading.Thread(target=init)
     init_thread.start()
 
