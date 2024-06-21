@@ -9,7 +9,7 @@ import mecademicpy.robot as mdr
 from PIL import Image, ImageTk
 import sys
 import serial
-from send_command_to_arduino import send_command_to_arduino
+#from send_command_to_arduino import send_command_to_arduino
 
 '''
 from rich import print
@@ -370,7 +370,7 @@ def wait_for_printing():
     
     if GlobalState().printing_state == 4:
         GlobalState().terminal_text += "PRINT FINISHED!"
-        status_update("Finished printing!\n  ready to print again")
+        status_update("Finished printing!\n  ready to print again")         #TODO send finish state to arduinio, wait until not hot anymore, receive command from arduino
         uf.cleanpose(GlobalState().msb)
         time.sleep(3)
         
@@ -390,6 +390,8 @@ def wait_for_printing():
 def stop_print_but():
 
     global stop_button
+
+    send_command_to_arduino(msg = "00b,")
 
     if(GUI.check_occupied(stop_button)):
         return
@@ -430,7 +432,7 @@ def stop():
 def init_print_but():
 
     
-    send_command_to_arduino()
+    send_command_to_arduino(msg = "000s,")
 
     global init_button
     
@@ -962,6 +964,30 @@ def search_file(filename):
     if filepath is not None:
         return filepath
     
+''' ***************Arduino serial functions*************** '''
+
+def startSerialConnection():
+    # Start the serial connection
+    global ser 
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+    time.sleep(1)
+    ser.reset_input_buffer()
+    print("Serial port opened")
+
+def send_command_to_arduino(msg):
+    # Send the command to the Arduino
+    global ser
+    try:
+        time.sleep(0.01)
+        print(f"Sending {msg} to arduino")
+        ser.write(msg.encode('utf-8')) 
+    
+    except KeyboardInterrupt:
+        print("Close serial communication")
+        ser.close()
+
+
+
 
 '''***************main gui function******************** '''
 def init_gui():
@@ -984,6 +1010,8 @@ def init_gui():
     cosmetics(root)
     tuning(root)
 
+    startSerialConnection()
+
     #start the terminal update thread
     update_terminal_thread = threading.Thread(target=terminal_update)
     update_terminal_thread.start()
@@ -995,6 +1023,7 @@ def init_gui():
 
     #start gui
     root.mainloop()
+
     
 
     
