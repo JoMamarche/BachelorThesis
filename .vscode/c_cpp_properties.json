@@ -2,8 +2,24 @@
     "version": 4,
     "configurations": [
         {
+            "name": "Linux",
+            "compilerPath": "/usr/bin/gcc",
+            "compilerArgs": [],
+            "intelliSenseMode": "linux-gcc-arm64",
+            "includePath": [
+                "/home/joel/Arduino/libraries",
+                "/home/joel/Arduino/libraries/Servo/src",
+                "/home/joel/Arduino/libraries/SimpleDHT",
+                "/home/joel/Arduino/libraries/Adafruit_MAX31865_library"
+            ],
+            "forcedInclude": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "defines": []
+        },
+        {
             "name": "Arduino",
-            "compilerPath": "C:\\Users\\steph\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\bin\\avr-g++",
+            "compilerPath": "/home/joel/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
             "compilerArgs": [
                 "-w",
                 "-std=gnu++11",
@@ -16,24 +32,28 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "C:\\Users\\steph\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
-                "C:\\Users\\steph\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\standard",
-                "C:\\Users\\steph\\OneDrive\\archiv\\altes\\Dokumente\\Arduino\\libraries\\AccelStepper\\src",
-                "/home/joel/Arduino/libraries",
-                "c:\\users\\steph\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include",
-                "c:\\users\\steph\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include-fixed",
-                "c:\\users\\steph\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include",
-                "/home/joel/Arduino/libraries/Adafruit_MAX31865_library"
+                "/home/joel/.arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino",
+                "/home/joel/.arduino15/packages/arduino/hardware/avr/1.8.6/variants/mega",
+                "/home/joel/Arduino/libraries/Adafruit_MAX31865_library",
+                "/home/joel/Arduino/libraries/Adafruit_BusIO",
+                "/home/joel/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/SPI/src",
+                "/home/joel/Arduino/libraries/Arduino-PID-Library-master",
+                "/home/joel/Arduino/libraries/SimpleDHT",
+                "/home/joel/Arduino/libraries/Servo/src",
+                "/home/joel/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src",
+                "/home/joel/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
+                "/home/joel/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
+                "/home/joel/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include"
             ],
             "forcedInclude": [
-                "C:\\Users\\steph\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino\\Arduino.h"
+                "/home/joel/.arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino/Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++11",
             "defines": [
                 "F_CPU=16000000L",
                 "ARDUINO=10607",
-                "ARDUINO_AVR_UNO",
+                "ARDUINO_AVR_MEGA2560",
                 "ARDUINO_ARCH_AVR",
                 "__DBL_MIN_EXP__=(-125)",
                 "__HQ_FBIT__=15",
@@ -535,17 +555,6 @@
                 "__BUILTIN_AVR_FMUL=1",
                 "USBCON"
             ]
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**/home/joel/Arduino/libraries"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-arm64"
         }
     ]
 }

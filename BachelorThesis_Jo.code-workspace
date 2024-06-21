@@ -2,12 +2,17 @@
 	"folders": [
 		{
 			"path": "../BachelorThesis_Jo"
+		},
+		{
+			"name": "SonoBone_v3",
+			"path": "SonoBone_v3"
 		}
 	],
 	"settings": {
 		"git.ignoreLimitWarning": true,
 		"files.associations": {
 			"new": "cpp"
-		}
+		},
+		"arduino.useArduinoCli": true
 	}
 }

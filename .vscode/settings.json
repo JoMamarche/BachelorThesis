@@ -1,6 +1,3 @@
 {
-    "git.ignoreLimitWarning": true,
-    "files.associations": {
-        "new": "cpp"
-    }
+    "C_Cpp.errorSquiggles": "disabled"
 }

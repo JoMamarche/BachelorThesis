@@ -1,0 +1,6 @@
+{
+    "sketch": "DigitalPotControl.ino",
+    "port": "/dev/ttyAMA0",
+    "board": "arduino:avr:mega",
+    "configuration": "cpu=atmega2560"
+}
