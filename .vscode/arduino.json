@@ -1,5 +1,6 @@
 {
-    "board": "arduino:avr:uno",
+    "board": "arduino:avr:mega",
     "port": "COM22",
-    "sketch": "control\\extra_components\\stepper_receiver\\stepper_receiver.ino"
+    "sketch": "control\\extra_components\\stepper_receiver\\stepper_receiver.ino",
+    "configuration": "cpu=atmega2560"
 }
