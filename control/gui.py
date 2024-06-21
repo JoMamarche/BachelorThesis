@@ -131,6 +131,11 @@ def print_control(root):
     pause_button = ctk.CTkButton(master=root, text="Pause Printing", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=pause_print_but)
     pause_button.place(relx=GUI.column1, rely=0.65, anchor=ctk.NW)
 
+    #button to Sterilize
+    global sterilize_button
+    sterilize_button = ctk.CTkButton(master=root, text="Sterilize", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=sterilize_but)
+    sterilize_button.place(relx=GUI.column1, rely=0.85, anchor=ctk.NW)
+
     #button to callibrate the robot
     global calibrate_button
     calibrate_button = ctk.CTkButton(master=root, text="Calibrate", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=calibration_but)
@@ -985,6 +990,13 @@ def send_command_to_arduino(msg):
     except KeyboardInterrupt:
         print("Close serial communication")
         ser.close()
+
+
+def sterilize_but():
+    # Send the sterilize command to the Arduino
+    send_command_to_arduino(msg = "5u,")
+
+    return
 
 
 
