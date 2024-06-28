@@ -8,9 +8,8 @@
             "intelliSenseMode": "linux-gcc-arm64",
             "includePath": [
                 "/home/joel/Arduino/libraries",
-                "/home/joel/Arduino/libraries/Servo/src",
-                "/home/joel/Arduino/libraries/SimpleDHT",
-                "/home/joel/Arduino/libraries/Adafruit_MAX31865_library"
+                "C:\Users\joelm\OneDrive\ETH\Bachelor\Bachelor Arbeit\BachelorThesis Code\Arduino\libraries",
+
             ],
             "forcedInclude": [],
             "cStandard": "c17",
