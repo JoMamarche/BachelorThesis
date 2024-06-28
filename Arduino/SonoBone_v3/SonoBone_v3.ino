@@ -17,7 +17,8 @@ float hum;
 
 //UV Light setup
 unsigned long UVStartTime = 0;
-const unsigned long UVDuration = 10000;
+//const unsigned long UVDuration = 10000;
+//int uv_time = 5;
 
 //PID setup
 double kp_HP_T=20, ki_HP_T=3, kd_HP_T=1;           
@@ -118,7 +119,7 @@ void loop() {
   while(state == 1){
     processCommand();
     Running();
-    turnOnUV();
+    //turnOnUV();
     if(input_HP_T >= setpoint_HP_T-5 && input_HP_T <= setpoint_HP_T+5 && input_Air_T >= setpoint_Air_T-1 && input_Air_T <= setpoint_Air_T+1){
       Serial.println("Heatpad and ambient air at right temperature");
       Serial.println("Start printing");
@@ -238,6 +239,10 @@ void processCommand(){
           Serial.println("Finish Print");
           state = 3;
         }
+        if(readString.indexOf('u') >0){
+          //uv_time = n;
+          turnOnUV(n);
+        }
         readString=""; //clears variable for new input
       }
     }  
@@ -304,19 +309,10 @@ void cooldown(){
   heatersControl();
 }
 
-void turnOnUV() {
-  // Check if the light is currently off and if 5 seconds haven't passed yet
-  if (digitalRead(UV) == HIGH && millis() - UVStartTime < UVDuration) {
-    // Turn on the light
-    digitalWrite(UV, LOW);
-    // Record the start time if the light was just turned on
-    if (UVStartTime == 0) {
-      UVStartTime = millis();
-    }
-  } else {
-    // Turn off the light after 10seconds
-    if (millis() - UVStartTime >= UVDuration) {
-      digitalWrite(UV, HIGH);
-    }
-  }
+void turnOnUV(int& uvtime) {
+
+  digitalWrite(UV, LOW);
+  delay(uvtime*1000);
+  digitalWrite(UV, HIGH);
+  
 }
