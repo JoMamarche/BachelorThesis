@@ -8,7 +8,7 @@ from datetime import datetime
 import mecademicpy.robot as mdr
 from PIL import Image, ImageTk
 import sys
-import serial
+import serial 
 #from send_command_to_arduino import send_command_to_arduino
 
 '''
@@ -65,7 +65,8 @@ class GUI:
     column1 = 0.05
     column2 = 0.28
     column3 = 0.78
-    column4 = 0.78 + 0.08 
+    column4 = column3 + 0.08 
+    column5 = column4 + 0.08
 
     buttoncolor = '#0859C3'
     disabled_color = '#A9A15C'
@@ -139,11 +140,11 @@ def print_control(root):
     #button to callibrate the robot
     global calibrate_button
     calibrate_button = ctk.CTkButton(master=root, text="Calibrate", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=calibration_but)
-    calibrate_button.place(relx=GUI.column1, rely=0.9, anchor=ctk.NW)
+    calibrate_button.place(relx=GUI.column1, rely=0.95, anchor=ctk.NW)
 
     global reset_button
     reset_button = ctk.CTkButton(master=root, text="Reset System", font=("Avenir Heavy",10), width = 50, height = 25, fg_color= GUI.second_color, command=reset_but)
-    reset_button.place(relx=GUI.column4, rely=0.25, anchor=ctk.NW)
+    reset_button.place(relx=GUI.column5, rely=0.63, anchor=ctk.NW)
 
     return
 
@@ -155,7 +156,7 @@ def print_monitor(root):
 
     #preview button
     preview_button = ctk.CTkButton(master=root, text="Preview Print", font=("Avenir Heavy",10),  width = 50, height = 25, fg_color= GUI.grey_color, command=open_preview)
-    preview_button.place(relx=GUI.column4, rely=0.35, anchor=ctk.NW)
+    preview_button.place(relx=GUI.column5, rely=0.73, anchor=ctk.NW)
     preview_button.configure(state="disabled")
     
 
@@ -192,8 +193,8 @@ def cosmetics(root):
     #cool icon
     image = Image.open(search_file("cool_robot_icon.png"))
     image  = image.resize((70,70))
-    photo = ImageTk.PhotoImage(image)
-    icon_label = ctk.CTkLabel(master=root, image=photo,fg_color= '#333332', text = "")
+    ctk_image = ctk.CTkImage(image)  # Convert PIL Image to CTkImage
+    icon_label = ctk.CTkLabel(master=root, image=ctk_image,fg_color= '#333332', text = "")
     icon_label.place(relx=0.12, rely=0.015, anchor=ctk.NW)
 
     copyright_label = ctk.CTkLabel(master=root, text="©2024 Acoustic Robotics Systems Lab, ETH Zurich", font=("Avenir Heavy", 8, 'bold'), width = 40, pady = 10, anchor = 'center')
@@ -206,6 +207,7 @@ def tuning(root):
     global z_offset_textbox
     global speed_textbox
     global e_speed_textbox
+    global air_t_textbox
 
     global z_offset_up_button
     global z_offset_down_button
@@ -213,6 +215,8 @@ def tuning(root):
     global speed_down_button
     global e_speed_up_button
     global e_speed_down_button
+    global air_t_up_button
+    global air_t_down_button 
 
     #set z offsetbutton up and down
     z_offset_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=z_up_but, width = 50, height = 25, anchor = 'center')
@@ -256,6 +260,21 @@ def tuning(root):
 
     e_speed_label= ctk.CTkLabel(master=root, text="Extrusion", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
     e_speed_label.place(relx=GUI.column4, rely=0.56, anchor=ctk.NW)
+
+    #set air temp up and down
+    air_t_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=air_t_up_but, width = 50, height = 25, anchor = 'center')
+    air_t_up_button.place(relx=GUI.column4, rely=0.25, anchor=ctk.NW)
+    air_t_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=z_down_but, width = 50, height = 25, anchor = 'center')
+    air_t_down_button.place(relx=GUI.column4, rely=0.45, anchor=ctk.NW)
+
+    #air temp textbox
+    air_t_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
+    air_t_textbox.place(relx=GUI.column4, rely=0.35, anchor=ctk.NW)
+    # Set the text of air temp textbox
+    air_t_textbox.insert(25, str(GlobalState().air_t_modifier) + "°C")
+
+    air_t_label= ctk.CTkLabel(master=root, text="Air T", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
+    air_t_label.place(relx=GUI.column4, rely=0.18, anchor=ctk.NW)
 
     return
 
@@ -657,7 +676,7 @@ def reset_but():
     GUI.reenable_button(reset_button)
 
 
-''' *************** 6 functions for in-print modifications *************** '''
+''' *************** functions for in-print modifications *************** '''
 
 def z_up_but():
     global z_offset_textbox
@@ -667,7 +686,7 @@ def z_up_but():
 
     if round(GlobalState().max_z_offset - GlobalState().user_z_offset, 1) < 1:
         GlobalState().terminal_text += " z_offset may not exceed" + " " + str(GlobalState().max_z_offset) + "mm in this print!"
-        speed_down_button.configure(state="normal")
+        z_offset_up_button.configure(state="normal")
         return
 
     GlobalState().user_z_offset += GlobalState().user_z_offset_increment
@@ -680,6 +699,7 @@ def z_up_but():
     time.sleep(0.05)
     z_offset_up_button.configure(state="normal")
     return
+
 
 def z_down_but():
     global z_offset_textbox
@@ -694,6 +714,28 @@ def z_down_but():
     print(GlobalState().user_z_offset)
     time.sleep(0.05)
     z_offset_down_button.configure(state="normal")
+    return
+
+def air_t_up_but():
+    global air_t_textbox
+    global air_t_up_button
+
+    air_t_up_button.configure(state="disabled")
+
+    if round(GlobalState().max_air_t - GlobalState().air_t_modifier, 1) < 1:
+        GlobalState().terminal_text += " Air temperature may not exceed" + " " + str(GlobalState().max_air_t) + "°C in this print!"
+        air_t_up_button.configure(state="normal")
+        return
+
+    GlobalState().air_t_modifier += GlobalState().air_t_incriment
+    GlobalState().air_t_modifier = round(GlobalState().air_t_modifier, 2)
+    air_t_textbox.delete(0, ctk.END)
+
+    # Insert the new text
+    air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+    print(GlobalState().air_t_modifier)
+    time.sleep(0.05)
+    air_t_up_button.configure(state="normal")
     return
 
 def e_speed_up_but():
@@ -974,10 +1016,14 @@ def search_file(filename):
 def startSerialConnection():
     # Start the serial connection
     global ser 
-    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
-    time.sleep(1)
-    ser.reset_input_buffer()
-    print("Serial port opened")
+    try:
+        ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+        time.sleep(1)
+        ser.reset_input_buffer()
+        print("Serial port opened")
+    except serial.SerialException:
+        print("Error: Failed to open serial port")
+        return
 
 def send_command_to_arduino(msg):
     # Send the command to the Arduino
@@ -1012,9 +1058,9 @@ def init_gui():
     ctk.set_default_color_theme("blue")  
 
     root = ctk.CTk()
-    root.geometry("850x450")
+    root.geometry("1080x720")
     root.title("SonoBone control interface")
-    #root.iconbitmap(search_file("SonoBone_icon.ico"))
+    root.iconbitmap(search_file("SonoBone_icon.ico"))
 
     #initialize all the gui parts
     print_control(root)

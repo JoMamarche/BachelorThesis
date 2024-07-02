@@ -8,7 +8,7 @@
             "intelliSenseMode": "linux-gcc-arm64",
             "includePath": [
                 "/home/joel/Arduino/libraries",
-                "C:\Users\joelm\OneDrive\ETH\Bachelor\Bachelor Arbeit\BachelorThesis Code\Arduino\libraries",
+                "C:\\Users\\joelm\\OneDrive\\ETH\\Bachelor\\Bachelor Arbeit\\BachelorThesis Code\\Arduino\\libraries"
 
             ],
             "forcedInclude": [],

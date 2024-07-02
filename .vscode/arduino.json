@@ -1,5 +1,5 @@
 {
-    "port": "/dev/ttyACM0",
+    "port": "COM3",
     "configuration": "cpu=atmega2560",
     "board": "arduino:avr:mega",
     "sketch": "Arduino/SonoBone_v3/SonoBone_v3.ino"

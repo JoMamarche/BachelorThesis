@@ -24,6 +24,16 @@ class GlobalState:
     extrusion_speed_modifier = 100 #%
     extrusion_speed_increment = 5
 
+    #air temp modifier
+    air_t_modifier = 25 #°C
+    air_t_incriment = 1
+    max_air_t = 50
+
+    #print bed temp modifier
+    printbed_temp_modifier = 25 #°C
+    printbed_temp_increment = 1
+    max_printbed_temp = 170
+
     #extrusion direction
     extrusion_direction = 1
     
