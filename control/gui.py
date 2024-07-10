@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
+from tkinter import Tk
 import string
 import os
 import threading
@@ -64,7 +65,7 @@ class GUI:
     
     column1 = 0.05
     column2 = 0.28
-    column3 = 0.78
+    column3 = 0.76
     column4 = column3 + 0.08 
     column5 = column4 + 0.08
 
@@ -173,11 +174,11 @@ def print_monitor(root):
     terminal_label = ctk.CTkLabel(master=root, text="Print info", font=("Avenir Heavy", 15, 'bold'), width = 40, pady = 10, anchor = 'center')
     terminal_label.place(relx=GUI.column2, rely=0.18, anchor=ctk.NW)
 
-    terminal_text = tk.Text(master=root, font=("Avenir",12), height=26, width=57, bg = '#1A0F10', fg = '#FFFFFF')
+    terminal_text = tk.Text(master=root, font=("Avenir",12), height=26+30, width=57+40, bg = '#1A0F10', fg = '#FFFFFF')
     terminal_text.place(relx=GUI.column2, rely=0.25, anchor=ctk.NW)
-
     scrollbar = tk.Scrollbar(root, command=terminal_text.yview, background = 'blue')
-    scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=root.winfo_screenheight()*0.59)
+    scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=Tk().winfo_screenheight()*0.8)
+    #scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=root.winfo_screenheight()*0.59)
     terminal_text['yscrollcommand'] = scrollbar.set
 
     terminal_text.insert(ctk.END, "")
@@ -187,7 +188,7 @@ def print_monitor(root):
 def cosmetics(root):
 
     #title
-    info_title = ctk.CTkLabel(master=root, text="SonoBone control interface", font=("Avenir Heavy", 31, 'bold'), fg_color= '#333332', width = root.winfo_screenwidth(), pady = 5, anchor = 'center')
+    info_title = ctk.CTkLabel(master=root, text="SonoBone control interface", font=("Avenir Heavy", 31, 'bold'), fg_color= '#333332', width = Tk().winfo_screenwidth(), pady = 5, anchor = 'center')
     info_title.place(relwidth = 1)
 
     #cool icon
@@ -208,6 +209,7 @@ def tuning(root):
     global speed_textbox
     global e_speed_textbox
     global air_t_textbox
+    global printbed_t_textbox
 
     global z_offset_up_button
     global z_offset_down_button
@@ -217,66 +219,81 @@ def tuning(root):
     global e_speed_down_button
     global air_t_up_button
     global air_t_down_button 
+    global printbed_t_up_button
+    global printbed_t_down_button
 
     #set z offsetbutton up and down
     z_offset_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=z_up_but, width = 50, height = 25, anchor = 'center')
     z_offset_up_button.place(relx=GUI.column3, rely=0.25, anchor=ctk.NW)
     z_offset_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=z_down_but, width = 50, height = 25, anchor = 'center')
     z_offset_down_button.place(relx=GUI.column3, rely=0.45, anchor=ctk.NW)
-
     #z offset textbox
     z_offset_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
     z_offset_textbox.place(relx=GUI.column3, rely=0.35, anchor=ctk.NW)
-    # Set the text of z_offset_textbox
+    # Set the text of z offset textbox
     z_offset_textbox.insert(0, str(GlobalState().user_z_offset) + "mm")
-
     z_offset_label= ctk.CTkLabel(master=root, text="Z-offset", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
     z_offset_label.place(relx=GUI.column3, rely=0.18, anchor=ctk.NW)
 
+    
     #set speed button up and down
     speed_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=speed_up_but, width = 50, height = 25)
     speed_up_button.place(relx=GUI.column3, rely=0.63, anchor=ctk.NW)
     speed_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=speed_down_but, width = 50, height = 25, anchor = 'center')
     speed_down_button.place(relx=GUI.column3, rely=0.83, anchor=ctk.NW)
-
     #speed textbox
     speed_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
     speed_textbox.place(relx=GUI.column3, rely=0.73, anchor=ctk.NW)
+    # Set the text of speed textbox
     speed_textbox.insert(0, f'{GlobalState().printspeed_modifier}%')
-
     speed_label= ctk.CTkLabel(master=root, text="Speed", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
     speed_label.place(relx=GUI.column3, rely=0.56, anchor=ctk.NW)
 
+    
     #set extrusion speed button up and down
     e_speed_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=e_speed_up_but, width = 50, height = 25)
     e_speed_up_button.place(relx=GUI.column4, rely=0.63, anchor=ctk.NW)
     e_speed_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=e_speed_down_but, width = 50, height = 25, anchor = 'center')
     e_speed_down_button.place(relx=GUI.column4, rely=0.83, anchor=ctk.NW)
-
     #extrusion speed textbox
     e_speed_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
     e_speed_textbox.place(relx=GUI.column4, rely=0.73, anchor=ctk.NW)
+    # Set the text of extrusion speed textbox
     e_speed_textbox.insert(0, f'{GlobalState().extrusion_speed_modifier}%')
-
     e_speed_label= ctk.CTkLabel(master=root, text="Extrusion", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
     e_speed_label.place(relx=GUI.column4, rely=0.56, anchor=ctk.NW)
 
+    
     #set air temp up and down
     air_t_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=air_t_up_but, width = 50, height = 25, anchor = 'center')
     air_t_up_button.place(relx=GUI.column4, rely=0.25, anchor=ctk.NW)
-    air_t_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=z_down_but, width = 50, height = 25, anchor = 'center')
+    air_t_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=air_t_down_but, width = 50, height = 25, anchor = 'center')
     air_t_down_button.place(relx=GUI.column4, rely=0.45, anchor=ctk.NW)
-
     #air temp textbox
     air_t_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
     air_t_textbox.place(relx=GUI.column4, rely=0.35, anchor=ctk.NW)
     # Set the text of air temp textbox
     air_t_textbox.insert(25, str(GlobalState().air_t_modifier) + "°C")
-
     air_t_label= ctk.CTkLabel(master=root, text="Air T", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
     air_t_label.place(relx=GUI.column4, rely=0.18, anchor=ctk.NW)
 
+
+    #set printbed temp up and down
+    printbed_t_up_button = ctk.CTkButton(master=root, text="↑", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=printbed_t_up_but, width = 50, height = 25, anchor = 'center')
+    printbed_t_up_button.place(relx=GUI.column5, rely=0.25, anchor=ctk.NW)
+    printbed_t_down_button = ctk.CTkButton(master=root, text="↓", font=("Avenir Heavy",15), fg_color= GUI.buttoncolor, command=printbed_t_down_but, width = 50, height = 25, anchor = 'center')
+    printbed_t_down_button.place(relx=GUI.column5, rely=0.45, anchor=ctk.NW)
+    #printbed temp textbox
+    printbed_t_textbox = ctk.CTkEntry(master=root, font=("Avenir", 10), width=50)
+    printbed_t_textbox.place(relx=GUI.column5, rely=0.35, anchor=ctk.NW)
+    # Set the text of printbed temp textbox
+    printbed_t_textbox.insert(25, str(GlobalState().printbed_t_modifier) + "°C")
+    printbed_t_label= ctk.CTkLabel(master=root, text="Printbed T", font=("Avenir Heavy", 15, 'bold'), width = 40, anchor = 'center')
+    printbed_t_label.place(relx=GUI.column5, rely=0.18, anchor=ctk.NW)
+
     return
+
+
 
 #------------------ Button functions ------------------
 
@@ -684,7 +701,7 @@ def z_up_but():
 
     z_offset_up_button.configure(state="disabled")
 
-    if round(GlobalState().max_z_offset - GlobalState().user_z_offset, 1) < 1:
+    if round(GlobalState().max_z_offset - GlobalState().user_z_offset, 1) < 0.1:
         GlobalState().terminal_text += " z_offset may not exceed" + " " + str(GlobalState().max_z_offset) + "mm in this print!"
         z_offset_up_button.configure(state="normal")
         return
@@ -699,7 +716,6 @@ def z_up_but():
     time.sleep(0.05)
     z_offset_up_button.configure(state="normal")
     return
-
 
 def z_down_but():
     global z_offset_textbox
@@ -727,7 +743,7 @@ def air_t_up_but():
         air_t_up_button.configure(state="normal")
         return
 
-    GlobalState().air_t_modifier += GlobalState().air_t_incriment
+    GlobalState().air_t_modifier += GlobalState().air_t_increment
     GlobalState().air_t_modifier = round(GlobalState().air_t_modifier, 2)
     air_t_textbox.delete(0, ctk.END)
 
@@ -736,6 +752,92 @@ def air_t_up_but():
     print(GlobalState().air_t_modifier)
     time.sleep(0.05)
     air_t_up_button.configure(state="normal")
+    return
+
+def air_t_down_but():
+    global air_t_textbox
+    global air_t_down_button
+
+    air_t_down_button.configure(state="disabled")
+
+    if round(GlobalState().air_t_modifier - GlobalState().min_air_t, 1) < 4:
+        if round(GlobalState().air_t_modifier - GlobalState().min_air_t, 1) >= 1:
+            GlobalState().air_t_modifier -= GlobalState().air_t_increment
+            GlobalState().air_t_modifier = round(GlobalState().air_t_modifier, 2)
+            air_t_textbox.delete(0, ctk.END)
+            air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+        GlobalState().terminal_text += " Air temperature may not reach" + " " + str(GlobalState().air_t_modifier) + "°C in this print!"
+        air_t_down_button.configure(state="normal")
+        
+        return
+
+    GlobalState().air_t_modifier -= GlobalState().air_t_increment
+    GlobalState().air_t_modifier = round(GlobalState().air_t_modifier, 2)
+    air_t_textbox.delete(0, ctk.END)
+
+    # Insert the new text
+    air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+    print(GlobalState().air_t_modifier)
+    time.sleep(0.05)
+    air_t_down_button.configure(state="normal")
+    return
+
+def printbed_t_up_but():
+    global printbed_t_textbox
+    global printbed_t_up_button
+
+    printbed_t_up_button.configure(state="disabled")
+
+    if round(GlobalState().max_printbed_t - GlobalState().printbed_t_modifier, 1) < 1:
+        GlobalState().terminal_text += " Printbed temperature may not exceed" + " " + str(GlobalState().max_air_t) + "°C in this print!"
+        printbed_t_up_button.configure(state="normal")
+        return
+    if (GlobalState().printbed_t_modifier < 40):
+        GlobalState().printbed_t_modifier += 1
+    elif (GlobalState().printbed_t_modifier >= 40 and GlobalState().printbed_t_modifier < 60):
+        GlobalState().printbed_t_modifier += 2
+    elif (GlobalState().printbed_t_modifier >= 60):
+        GlobalState().printbed_t_modifier += 5
+    GlobalState().printbed_t_modifier = round(GlobalState().printbed_t_modifier, 2)
+    printbed_t_textbox.delete(0, ctk.END)
+
+    # Insert the new text
+    printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+    print(GlobalState().printbed_t_modifier)
+    time.sleep(0.05)
+    printbed_t_up_button.configure(state="normal")
+    return
+
+def printbed_t_down_but():
+    global printbed_t_textbox
+    global printbed_t_down_button
+
+    printbed_t_down_button.configure(state="disabled")
+
+    if round(GlobalState().printbed_t_modifier - GlobalState().min_printbed_t, 1) < 4:
+        if round(GlobalState().printbed_t_modifier - GlobalState().min_printbed_t, 1) >= 1:
+            GlobalState().printbed_t_modifier -= GlobalState().printbed_t_increment
+            GlobalState().printbed_t_modifier = round(GlobalState().printbed_t_modifier, 2)
+            printbed_t_textbox.delete(0, ctk.END)
+            printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+        GlobalState().terminal_text += " Printbed temperature may not reach" + " " + str(GlobalState().printbed_t_modifier) + "°C in this print!"
+        printbed_t_down_button.configure(state="normal")
+        
+        return
+    if (GlobalState().printbed_t_modifier <= 40):
+        GlobalState().printbed_t_modifier -= 1
+    elif (GlobalState().printbed_t_modifier > 40 and GlobalState().printbed_t_modifier <= 60):
+        GlobalState().printbed_t_modifier -= 2
+    elif (GlobalState().printbed_t_modifier > 60):
+        GlobalState().printbed_t_modifier -= 5
+    GlobalState().printbed_t_modifier = round(GlobalState().printbed_t_modifier, 2)
+    printbed_t_textbox.delete(0, ctk.END)
+
+    # Insert the new text
+    printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+    print(GlobalState().printbed_t_modifier)
+    time.sleep(0.05)
+    printbed_t_down_button.configure(state="normal")
     return
 
 def e_speed_up_but():
@@ -857,8 +959,8 @@ def terminal_update():
     while True:
         i += 1
 
-        if(GlobalState().terminal_text == last_text):
-            continue
+        #if(GlobalState().terminal_text == last_text):
+         #   continue
         if GlobalState().terminal_text != "":
             #get timestamp
             current_time = datetime.now().time()
@@ -1057,10 +1159,25 @@ def init_gui():
     ctk.set_appearance_mode("dark")  
     ctk.set_default_color_theme("blue")  
 
+
+    
+    
     root = ctk.CTk()
+    # Get the screen width and height
+    #screen_width = root.winfo_screenwidth()
+    #screen_height = root.winfo_screenheight()
+    #root.geometry(f"{screen_width}x{screen_height}")
     root.geometry("1080x720")
     root.title("SonoBone control interface")
     root.iconbitmap(search_file("SonoBone_icon.ico"))
+    
+    # Add a button to exit fullscreen
+    def exit_fullscreen():
+        root.attributes("-fullscreen", False)
+        root.geometry("800x600")  # Optionally set a new size when exiting fullscreen
+
+    exit_button = ctk.CTkButton(root, text="Exit Fullscreen", command=exit_fullscreen)
+    exit_button.pack(pady=20)
 
     #initialize all the gui parts
     print_control(root)

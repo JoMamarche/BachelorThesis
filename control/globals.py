@@ -26,13 +26,15 @@ class GlobalState:
 
     #air temp modifier
     air_t_modifier = 25 #°C
-    air_t_incriment = 1
+    air_t_increment = 1
     max_air_t = 50
+    min_air_t = 20
 
     #print bed temp modifier
-    printbed_temp_modifier = 25 #°C
-    printbed_temp_increment = 1
-    max_printbed_temp = 170
+    printbed_t_modifier = 25 #°C
+    printbed_t_increment = 1
+    max_printbed_t = 170
+    min_printbed_t = 20
 
     #extrusion direction
     extrusion_direction = 1
