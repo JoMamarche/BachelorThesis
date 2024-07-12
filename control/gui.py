@@ -1,6 +1,5 @@
 import customtkinter as ctk
 import tkinter as tk
-from tkinter import Tk
 import string
 import os
 import threading
@@ -177,8 +176,7 @@ def print_monitor(root):
     terminal_text = tk.Text(master=root, font=("Avenir",12), height=26+30, width=57+40, bg = '#1A0F10', fg = '#FFFFFF')
     terminal_text.place(relx=GUI.column2, rely=0.25, anchor=ctk.NW)
     scrollbar = tk.Scrollbar(root, command=terminal_text.yview, background = 'blue')
-    scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=Tk().winfo_screenheight()*0.8)
-    #scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=root.winfo_screenheight()*0.59)
+    scrollbar.place(relx=GUI.column2+0.43, rely=0.25, anchor=ctk.NW, height=root.winfo_screenheight()*0.8)
     terminal_text['yscrollcommand'] = scrollbar.set
 
     terminal_text.insert(ctk.END, "")
@@ -188,7 +186,7 @@ def print_monitor(root):
 def cosmetics(root):
 
     #title
-    info_title = ctk.CTkLabel(master=root, text="SonoBone control interface", font=("Avenir Heavy", 31, 'bold'), fg_color= '#333332', width = Tk().winfo_screenwidth(), pady = 5, anchor = 'center')
+    info_title = ctk.CTkLabel(master=root, text="SonoBone control interface", font=("Avenir Heavy", 31, 'bold'), fg_color= '#333332', width = root.winfo_screenwidth(), pady = 5, anchor = 'center')
     info_title.place(relwidth = 1)
 
     #cool icon
@@ -752,6 +750,7 @@ def air_t_up_but():
     print(GlobalState().air_t_modifier)
     time.sleep(0.05)
     air_t_up_button.configure(state="normal")
+    send_command_to_arduino(msg = str(GlobalState().air_t_modifier) + "h,")
     return
 
 def air_t_down_but():
@@ -768,6 +767,7 @@ def air_t_down_but():
             air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
         GlobalState().terminal_text += " Air temperature may not reach" + " " + str(GlobalState().air_t_modifier) + "°C in this print!"
         air_t_down_button.configure(state="normal")
+        send_command_to_arduino(msg = str(GlobalState().air_t_modifier) + "h,")
         
         return
 
@@ -780,6 +780,8 @@ def air_t_down_but():
     print(GlobalState().air_t_modifier)
     time.sleep(0.05)
     air_t_down_button.configure(state="normal")
+    send_command_to_arduino(msg = str(GlobalState().air_t_modifier) + "h,")
+
     return
 
 def printbed_t_up_but():
@@ -806,6 +808,8 @@ def printbed_t_up_but():
     print(GlobalState().printbed_t_modifier)
     time.sleep(0.05)
     printbed_t_up_button.configure(state="normal")
+    send_command_to_arduino(msg = str(GlobalState().printbed_t_modifier) + "p,")
+
     return
 
 def printbed_t_down_but():
@@ -822,6 +826,7 @@ def printbed_t_down_but():
             printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
         GlobalState().terminal_text += " Printbed temperature may not reach" + " " + str(GlobalState().printbed_t_modifier) + "°C in this print!"
         printbed_t_down_button.configure(state="normal")
+        send_command_to_arduino(msg = str(GlobalState().printbed_t_modifier) + "p,")
         
         return
     if (GlobalState().printbed_t_modifier <= 40):
@@ -838,6 +843,7 @@ def printbed_t_down_but():
     print(GlobalState().printbed_t_modifier)
     time.sleep(0.05)
     printbed_t_down_button.configure(state="normal")
+    send_command_to_arduino(msg = str(GlobalState().printbed_t_modifier) + "p,")
     return
 
 def e_speed_up_but():
@@ -1035,6 +1041,54 @@ def on_z_offset_textbox_return(event):
 
     return
 
+def on_air_t_textbox_return(event):
+
+    global air_t_textbox 
+
+    # Get the current value of the textbox
+    value = air_t_textbox.get()
+    value = float(value.rstrip('°C'))
+
+    if(value > GlobalState().max_air_t):
+        GlobalState().terminal_text += " Air temperature may not exceed" + " " + str(GlobalState().max_air_t) + "°C in this print!"
+        air_t_textbox.delete(0, ctk.END)
+        # Insert the new text
+        air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+        return
+
+    GlobalState().air_t_modifier = value
+    air_t_textbox.delete(0, ctk.END)
+    # Insert the new text
+    air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+    send_command_to_arduino(msg = str(GlobalState().air_t_modifier) + "p,")
+    print(f"Air temperature textbox value: {value}")
+
+    return
+
+def on_printbed_t_textbox_return(event):
+
+    global printbed_t_textbox 
+
+    # Get the current value of the textbox
+    value = printbed_t_textbox.get()
+    value = float(value.rstrip('°C'))
+
+    if(value > GlobalState().max_printbed_t):
+        GlobalState().terminal_text += " Printbed temperature may not exceed" + " " + str(GlobalState().max_printbed_t) + "°C in this print!"
+        printbed_t_textbox.delete(0, ctk.END)
+        # Insert the new text
+        printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+        return
+
+    GlobalState().printbed_t_modifier = value
+    printbed_t_textbox.delete(0, ctk.END)
+    # Insert the new text
+    printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+    send_command_to_arduino(msg = str(GlobalState().printbed_t_modifier) + "p,")
+    print(f"Printbed temperature textbox value: {value}")
+
+    return
+
 def on_e_speed_textbox_return(event):
 
     global e_speed_textbox
@@ -1117,7 +1171,7 @@ def search_file(filename):
 
 def startSerialConnection():
     # Start the serial connection
-    global ser 
+    global ser
     try:
         ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
         time.sleep(1)
@@ -1171,13 +1225,6 @@ def init_gui():
     root.title("SonoBone control interface")
     root.iconbitmap(search_file("SonoBone_icon.ico"))
     
-    # Add a button to exit fullscreen
-    def exit_fullscreen():
-        root.attributes("-fullscreen", False)
-        root.geometry("800x600")  # Optionally set a new size when exiting fullscreen
-
-    exit_button = ctk.CTkButton(root, text="Exit Fullscreen", command=exit_fullscreen)
-    exit_button.pack(pady=20)
 
     #initialize all the gui parts
     print_control(root)
@@ -1195,6 +1242,8 @@ def init_gui():
     e_speed_textbox.bind('<Return>', on_e_speed_textbox_return)
     z_offset_textbox.bind('<Return>', on_z_offset_textbox_return)
     speed_textbox.bind('<Return>', on_speed_textbox_return)
+    air_t_textbox.bind('<Return>', on_air_t_textbox_return)
+    printbed_t_textbox.bind('<Return>', on_printbed_t_textbox_return)
 
     #start gui
     root.mainloop()
