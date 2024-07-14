@@ -1053,7 +1053,14 @@ def on_air_t_textbox_return(event):
         GlobalState().terminal_text += " Air temperature may not exceed" + " " + str(GlobalState().max_air_t) + "°C in this print!"
         air_t_textbox.delete(0, ctk.END)
         # Insert the new text
-        air_t_textbox.insert(0, f'{GlobalState().air_t_modifier}°C')
+        air_t_textbox.insert(0, f'{GlobalState().max_air_t}°C')
+        return
+    
+    if(value < GlobalState().min_air_t):
+        GlobalState().terminal_text += " Air temperature may not reach" + " " + str(GlobalState().min_air_t) + "°C in this print!"
+        air_t_textbox.delete(0, ctk.END)
+        # Insert the new text
+        air_t_textbox.insert(0, f'{GlobalState().min_air_t}°C')
         return
 
     GlobalState().air_t_modifier = value
@@ -1077,7 +1084,14 @@ def on_printbed_t_textbox_return(event):
         GlobalState().terminal_text += " Printbed temperature may not exceed" + " " + str(GlobalState().max_printbed_t) + "°C in this print!"
         printbed_t_textbox.delete(0, ctk.END)
         # Insert the new text
-        printbed_t_textbox.insert(0, f'{GlobalState().printbed_t_modifier}°C')
+        printbed_t_textbox.insert(0, f'{GlobalState().max_printbed_t}°C')
+        return
+    
+    if(value < GlobalState().min_printbed_t):
+        GlobalState().terminal_text += " Printbed temperature may not reach" + " " + str(GlobalState().min_printbed_t) + "°C in this print!"
+        printbed_t_textbox.delete(0, ctk.END)
+        # Insert the new text
+        printbed_t_textbox.insert(0, f'{GlobalState().min_printbed_t}°C')
         return
 
     GlobalState().printbed_t_modifier = value
