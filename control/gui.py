@@ -794,12 +794,12 @@ def printbed_t_up_but():
         GlobalState().terminal_text += " Printbed temperature may not exceed" + " " + str(GlobalState().max_printbed_t) + "°C in this print!"
         printbed_t_up_button.configure(state="normal")
         return
-    if (GlobalState().printbed_t_modifier < 40):
-        GlobalState().printbed_t_modifier += 1
-    elif (GlobalState().printbed_t_modifier >= 40 and GlobalState().printbed_t_modifier < 60):
+    if (GlobalState().printbed_t_modifier >= 40 and GlobalState().printbed_t_modifier < 60):
         GlobalState().printbed_t_modifier += 2
-    elif (GlobalState().printbed_t_modifier >= 60):
+    elif (GlobalState().printbed_t_modifier >= 60 and GlobalState().printbed_t_modifier < 165):
         GlobalState().printbed_t_modifier += 5
+    else:
+        GlobalState().printbed_t_modifier += 1
     GlobalState().printbed_t_modifier = round(GlobalState().printbed_t_modifier, 2)
     printbed_t_textbox.delete(0, ctk.END)
 
